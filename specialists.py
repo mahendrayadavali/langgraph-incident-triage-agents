@@ -9,7 +9,7 @@ from langchain_core.tools import tool
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 # Keep every specialist on one model and one fixture directory.
-MODEL_ID = "gemini-3.7-flash"
+MODEL_ID = "gemini-3.1-flash-lite"
 DATA_DIR = Path(__file__).parent / "data"
 LEVELS = {"INFO": 0, "WARN": 1, "ERROR": 2}
 
@@ -20,17 +20,8 @@ def load_json(name: str):
 
 
 def build_model():
-    # Read the active project selected in Cloud Shell.
-    project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
-    if not project_id:
-        raise RuntimeError("GOOGLE_CLOUD_PROJECT is not set.")
-
-    # Use Vertex AI with bounded retries and request time.
     return ChatGoogleGenerativeAI(
         model=MODEL_ID,
-        project=project_id,
-        location="global",
-        vertexai=True,
         max_retries=2,
         timeout=180,
     )
